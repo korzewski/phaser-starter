@@ -43,7 +43,7 @@ class Boot extends Phaser.State {
 
 class Preloader extends Phaser.State{
     preload() {
-        this.game.load.image('example', 'extra/img/example.png');
+        this.game.load.image('example', 'assets/images/example.png');
     }
 
     create(){

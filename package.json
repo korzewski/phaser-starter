@@ -1,9 +1,12 @@
 {
-  "name": "phaser-starter",
+  "name": "day-ritual",
   "version": "1.0.0",
-  "description": "",
+  "license": "MIT",
   "main": "gulp.js",
-  "dependencies": {
+  "scripts": {
+    "start": "node server.js & gulp"
+  },
+  "devDependencies": {
     "babelify": "^6.3.0",
     "browserify": "^11.2.0",
     "gulp": "^3.9.0",
@@ -13,10 +16,5 @@
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.4.0",
     "express": "^4.13.4"
-  },
-  "scripts": {
-    "start": "node server.js & gulp"
-  },
-  "author": "",
-  "license": "ISC"
+  }
 }
