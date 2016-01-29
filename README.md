@@ -1,6 +1,5 @@
-# phaser-starter
-* included - ES6 (babel), browserify, sass
+# Day Ritual
 
-1. ```npm install```
-2. ```npm start```
-3. open ```localhost:9000``` enjoy!
+* ```npm install```
+* ```npm start```
+* ```http://localhost:9000```
