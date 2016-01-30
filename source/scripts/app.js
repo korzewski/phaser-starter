@@ -1,3 +1,4 @@
+import CoffeeMachine from './states/CoffeeMachine';
 import Cornflakes from './states/cornflakes';
 
 const settings = {
@@ -10,7 +11,10 @@ class Init extends Phaser.Game {
         super(settings.width, settings.height, Phaser.AUTO, 'game');
         this.state.add('Boot', Boot, false);
         this.state.add('Preloader', Preloader, false);
+
+        this.state.add('CoffeeMachine', CoffeeMachine, false);
         this.state.add('Cornflakes', Cornflakes, false);
+
         this.state.start('Boot');
     }
 }
@@ -47,7 +51,7 @@ class Preloader extends Phaser.State{
     }
 
     create(){
-        this.game.state.start('Cornflakes');
+        this.game.state.start('CoffeeMachine');
     }
 
 }
