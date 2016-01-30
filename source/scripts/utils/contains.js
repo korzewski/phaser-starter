@@ -1,4 +1,4 @@
-export default function random(array, value) {
+export default function(array, value) {
   let found = 0;
 
   array.forEach(element => {
