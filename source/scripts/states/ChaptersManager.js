@@ -6,14 +6,17 @@ export default class ChaptersManager extends Phaser.State{
 	}
 
 	initChapters(currentIndex){
-		this.chaptersList = shuffle(['CoffeeMachine', 'Cornflakes']);
-       	this.currentChapterIndex = currentIndex;
+		if(typeof this.game.global === 'undefined'){
+			this.game.global = {};
+		}
+       	this.game.global.currentChapterIndex = currentIndex;
 
-       	if(this.currentChapterIndex == -1){
+       	if(this.game.global.currentChapterIndex == -1){
+			this.game.global.chaptersList = shuffle(['CoffeeMachine', 'Cornflakes', 'PooScene']);
+        	console.log('chaptersList: ', this.game.global.chaptersList);
        		this.nextChapter();
        	}
-        console.log('chaptersList: ', this.chaptersList);
-        console.log('currentChapterIndex: ', this.currentChapterIndex);
+        console.log('currentChapterIndex: ', this.game.global.currentChapterIndex);
 	}
 
 	create(){
@@ -23,11 +26,12 @@ export default class ChaptersManager extends Phaser.State{
 	nextChapter(){
 		alert('next chapter');
 
-		if(this.currentChapterIndex + 1 < this.chaptersList.length){
-			this.currentChapterIndex++;
-			this.game.state.start(this.chaptersList[this.currentChapterIndex], true, false, this.currentChapterIndex);
+		if(this.game.global.currentChapterIndex + 1 < this.game.global.chaptersList.length){
+			this.game.global.currentChapterIndex++;
+			this.game.state.start(this.game.global.chaptersList[this.game.global.currentChapterIndex], true, false, this.game.global.currentChapterIndex);
 		} else {
 			alert('last chapter');
+			this.gameOver();
 		}
 	}
 

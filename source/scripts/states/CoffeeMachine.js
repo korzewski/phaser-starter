@@ -155,7 +155,7 @@ export default class CoffeeMachine extends ChaptersManager{
 			this.light.frame = 1;
 			this.correctHits++;
 
-			if( !(this.correctHits % 4) ) {
+			if( !(this.correctHits % 2) ) {
 				this.coffee.frame++;
 
 			}
