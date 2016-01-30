@@ -9,9 +9,9 @@ export default class PooScene extends Phaser.State {
     }
 
     create() {
+        this.setSceneParameters();
         this.setPooMan();
         this.setBar();
-        this.setSceneParameters();
     }
 
     setPooMan() {
@@ -23,10 +23,11 @@ export default class PooScene extends Phaser.State {
         this.pooManHeadRed.anchor.x = 0.5;
         this.pooManHeadRed.anchor.y = 0.5;
         this.pooManHeadRed.alpha = 0;
+        this.pooManHeadRed.tint = 0x990000;
     }
 
     setSceneParameters() {
-        //TODO: Poczatkowy rozmiar paskow czerwonych
+        this.startBadProgressWidth = 150;
         this.minMagneticPowerToCalculate = 5;
         this.minMagneticPower = 5;
         this.maxMagneticPower = 15;
@@ -43,7 +44,6 @@ export default class PooScene extends Phaser.State {
         this.test = true;
         this.maxHeadScale = 1.5;
         this.maxAlpha = 0.5;
-        this.pooManHeadRed.tint = 0x990000;
     }
 
     setBar() {
@@ -53,12 +53,12 @@ export default class PooScene extends Phaser.State {
         this.toiletBarBadLeft = this.game.add.sprite(0, barCenterY, 'toiletBarBad');
         this.toiletBarBadLeft.x = this.toiletBarMargin;
         var maxX = this.game.width / 2 - this.toiletBarMargin;
-        var badBarMultiplier = Math.min(hardnessBarMultiplier, maxX)
-        this.toiletBarBadLeft.scale.x = badBarMultiplier;
+        var badBarScale = this.startBadProgressWidth + Math.min(hardnessBarMultiplier, maxX);
+        this.toiletBarBadLeft.scale.x = badBarScale;
         var endBarX = this.game.width - this.toiletBarMargin;
         this.toiletBarBadRight = this.game.add.sprite(0, barCenterY, 'toiletBarBad');
         this.toiletBarBadRight.x = endBarX - this.toiletBarBadLeft.width;
-        this.toiletBarBadRight.scale.x = badBarMultiplier;
+        this.toiletBarBadRight.scale.x = badBarScale;
         this.toiletBarCorrect = this.game.add.sprite(0, barCenterY, 'toiletBarCorrect');
         this.toiletBarCorrect.x = this.toiletBarMargin + this.toiletBarBadLeft.scale.x;
         this.toiletBarCorrect.scale.x = (this.game.width / 2 - this.toiletBarMargin - this.toiletBarBadRight.width) * 2;
