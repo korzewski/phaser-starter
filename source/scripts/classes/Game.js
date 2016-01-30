@@ -4,7 +4,7 @@ export default class Game extends Phaser.State{
 	}
 
 	update(){
-		this.example.x += 2;
+		this.example.x += 5;
 		if(this.example.x > this.game.width){
 			this.example.x = -5;
 		}
