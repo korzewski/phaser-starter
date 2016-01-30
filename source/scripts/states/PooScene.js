@@ -8,7 +8,33 @@ export default class PooScene extends Phaser.State {
 
     create() {
         this.pooMan = this.game.add.sprite(0, 0, 'pooMan');
+        this.setBar();
 
+        this.text1 = this.add.text(this.game.world.centerX / 2 - 20, 0, "");
+        this.text2 = this.add.text(this.game.world.centerX / 2 - 20, 20, "");
+        this.text3 = this.add.text(this.game.world.centerX / 2 - 20, 40, "");
+        this.text4 = this.add.text(this.game.world.centerX / 2 - 20, 60, "");
+
+        this.setSceneParameters();
+    }
+
+    setSceneParameters() {
+        this.minMagneticPowerToCalculate = 5;
+        this.minMagneticPower = 5;
+        this.maxMagneticPower = 15;
+        this.maxMagneticRandomPower = this.maxMagneticPower / 2;
+        this.maxPlayerPower = 18;
+        this.whenUpdateMinPower = 120;
+        this.countFromUpdateMinPower = this.whenUpdateMinPower;
+        this.timeInCorrectArea = 0;
+        this.enteredIntoCorrectAreaTime = new Date().getTime();
+        this.shouldSetEnetringTime = true;
+        this.timeInCorrectAreToWin = 3000;
+        this.totalTimeForScene = 8000;
+        this.startTotalTime = new Date().getTime();
+    }
+
+    setBar() {
         var barCenterY = this.game.height - 100;
         var hardnessBarMultiplier = this.game.settings.level * this.game.width / 20;
         this.toiletBarMargin = 20;
@@ -27,25 +53,6 @@ export default class PooScene extends Phaser.State {
         this.toiletMarker = this.game.add.sprite(0, 0, 'toiletMarker');
         this.toiletMarker.y = barCenterY;// - this.toiletMarker.height / 2;
         this.toiletMarker.x = this.game.width / 2 - this.toiletMarker.width / 2;
-
-        this.text1 = this.add.text(this.game.world.centerX / 2 - 20, 0, "");
-        this.text2 = this.add.text(this.game.world.centerX / 2 - 20, 20, "");
-        this.text3 = this.add.text(this.game.world.centerX / 2 - 20, 40, "");
-        this.text4 = this.add.text(this.game.world.centerX / 2 - 20, 60, "");
-
-        this.minMagneticPowerToCalculate = 5;
-        this.minMagneticPower = 5;
-        this.maxMagneticPower = 15;
-        this.maxMagneticRandomPower = this.maxMagneticPower / 2;
-        this.maxPlayerPower = 18;
-        this.whenUpdateMinPower = 120;
-        this.countFromUpdateMinPower = this.whenUpdateMinPower;
-        this.timeInCorrectArea = 0;
-        this.enteredIntoCorrectAreaTime = new Date().getTime();
-        this.shouldSetEnetringTime = true;
-        this.timeInCorrectAreToWin = 3000;
-        this.totalTimeForScene = 8000;
-        this.startTotalTime = new Date().getTime();
     }
 
     fail() {
@@ -84,13 +91,16 @@ export default class PooScene extends Phaser.State {
 
         this.text4.setText("markerPowerWithPlayer: " + markerPower);
         this.toiletMarker.x += markerPower;
-        if ((this.toiletMarker.x <= this.toiletBarBadLeft.x
-            || this.toiletMarker.x >= this.toiletBarBadRight.x + this.toiletBarBadRight.scale.x
-            || new Date().getTime() - this.startTotalTime > this.totalTimeForScene)
-            && this.timeInCorrectArea == 0
-        ) {
+        if (this.isPlayerLoser()) {
             this.fail();
         }
+    }
+
+    isPlayerLoser() {
+        return (this.toiletMarker.x <= this.toiletBarBadLeft.x
+            || this.toiletMarker.x >= this.toiletBarBadRight.x + this.toiletBarBadRight.scale.x
+            || new Date().getTime() - this.startTotalTime > this.totalTimeForScene)
+            && this.timeInCorrectArea == 0;
     }
 
     getMarkerPower(halfGameWidth) {
