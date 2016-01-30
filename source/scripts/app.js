@@ -1,8 +1,9 @@
 import Game from './classes/Game';
+import CoffeeMachine from './states/CoffeeMachine';
 
 const settings = {
-    width: 800,
-    height: 600
+    width: 1024,
+    height: 768
 }
 
 class Init extends Phaser.Game {
@@ -11,6 +12,9 @@ class Init extends Phaser.Game {
         this.state.add('Boot', Boot, false);
         this.state.add('Preloader', Preloader, false);
         this.state.add('Game', Game, false);
+
+        this.state.add('CoffeeMachine', CoffeeMachine, false);
+
         this.state.start('Boot');
     }
 }
@@ -47,7 +51,7 @@ class Preloader extends Phaser.State{
     }
 
     create(){
-        this.game.state.start('Game');
+        this.game.state.start('CoffeeMachine');
     }
 
 }
