@@ -1,45 +1,58 @@
 export default class CoffeeMachine extends Phaser.State{
 	preload(){
-		this.game.load.image('coffeeMachine', 'assets/images/cm_0.png');
-		this.game.load.image('coffeeMachineCup', 'assets/images/cm_3.png');
-		this.game.load.image('pacLeft', 'assets/images/cm_2.png');
-		this.game.load.image('pacRight', 'assets/images/cm_1.png');
+		this.game.load.image('coffeeMachineBg', 'assets/images/coffeeMachine/bg.jpg');
+		this.game.load.image('machine', 'assets/images/coffeeMachine/machine.png');
+		this.game.load.image('machineTop', 'assets/images/coffeeMachine/machineTop.png');
+		this.game.load.image('glass', 'assets/images/coffeeMachine/glass.png');
+		this.game.load.image('boom', 'assets/images/coffeeMachine/boom.png');
+
+		this.game.load.spritesheet('error', 'assets/images/coffeeMachine/error.png', 98, 49);
+		this.game.load.spritesheet('light', 'assets/images/coffeeMachine/light.png', 21, 22);
+		this.game.load.spritesheet('coffee', 'assets/images/coffeeMachine/coffee.png', 203, 203);
 	}
 
 	create(){
 		this.game.stage.backgroundColor = '#ffffff';
 
+		this.game.add.sprite(0, 0, 'coffeeMachineBg');
+
 		this.coffeeMachine = this.game.add.group();
-		this.coffeeMachine.create(0, 0, 'coffeeMachine');
-		this.coffeeMachine.create(125, 400, 'coffeeMachineCup');
+		this.boom = this.game.add.sprite(60, -130, 'boom');
+		this.boom.anchor.setTo(0.5);
+		// this.boom.alpha = 0;
 
-		this.pacLeft = this.game.add.sprite(-170, 100, 'pacLeft');
-	    this.coffeeMachine.add(this.pacLeft);
-		this.pacRight = this.game.add.sprite(400, 100, 'pacRight');
-	    this.coffeeMachine.add(this.pacRight);
+		this.coffeeMachine.add(this.boom);
 
-		this.barLeft = this.game.add.graphics();
-	    this.barLeft.beginFill(0xffffff, 0.8);
-	    this.barLeft.drawRect(35, 105, 100, 50);
-	    this.coffeeMachine.add(this.barLeft);
+		this.coffeeMachine.create(0, 0, 'machine');
 
-	    this.barRight = this.game.add.graphics();
-	    this.barRight.beginFill(0xffffff, 0.8);
-	    this.barRight.drawRect(250, 105, 100, 50);
-	    this.coffeeMachine.add(this.barRight);
+		this.coffee = this.game.add.sprite(137, 224, 'coffee');
+		this.coffeeMachine.add(this.coffee);
+		this.coffee.anchor.setTo(0, 1);
+		// this.coffee.frame = 0;
 
-		let style = { font: "bold 32px Arial", fill: "#f00", boundsAlignH: "center", boundsAlignV: "middle" };
-		this.errorLeft = this.game.add.text(40, 110, 'Error!', style, this.coffeeMachine);
-		this.errorRight = this.game.add.text(255, 110, 'Error!', style, this.coffeeMachine);
+		this.coffeeMachine.create(137, 0, 'glass');
 
-		this.coffeeMachine.x = 310;
-		this.coffeeMachine.y = 80;
+		this.coffeeMachine.create(102, -155, 'machineTop');
 
-		this.pacLeft.alpha = this.pacRight.alpha = this.errorLeft.alpha = this.errorRight.alpha = 0;
+		this.errorLeft = this.game.add.sprite(113, -81, 'error');
+		this.coffeeMachine.add(this.errorLeft);
+		this.errorLeft.frame = 0;
 
-		this.leftButtonRect = new Phaser.Rectangle(220, 150, 150, 150);
-		this.rightButtonRect = new Phaser.Rectangle(650, 150, 150, 150);
-		this.startButtonCircle = new Phaser.Circle(500, 210, 30);
+		this.errorRight = this.game.add.sprite(271, -81, 'error');
+		this.coffeeMachine.add(this.errorRight);
+		this.errorRight.frame = 0;
+
+		this.light = this.game.add.sprite(228, -66, 'light');
+		this.coffeeMachine.add(this.light);
+		this.light.frame = 0;
+
+
+		this.coffeeMachine.x = 300;
+		this.coffeeMachine.y = 270;
+
+		this.leftButtonRect = new Phaser.Rectangle(260, 150, 250, 150);
+		this.rightButtonRect = new Phaser.Rectangle(580, 150, 250, 150);
+		this.startButtonCircle = new Phaser.Circle(549, 225, 50);
 
 		this.isHitting = false;
 		this.isStarted = false;
@@ -51,6 +64,11 @@ export default class CoffeeMachine extends Phaser.State{
 
 		this.correctHits = 0;
 		this.missedHits = 0;
+
+		setTimeout(() => {
+			this.isStarted = true;
+			this.light.frame = 1;
+		}, 1000);
 	}
 
 	update(){
@@ -58,9 +76,10 @@ export default class CoffeeMachine extends Phaser.State{
 		if(this.game.input.activePointer.isDown && !this.isHitting){
 			let posX = this.game.input.activePointer.x;
 			let posY = this.game.input.activePointer.y;
-			if(this.startButtonCircle.contains(posX, posY)){
-				this.isStarted = true;
-			}
+			// if(this.startButtonCircle.contains(posX, posY)){
+			// 	this.isStarted = true;
+			// 	this.light.frame = 1;
+			// }
 
 			if( this.leftButtonRect.contains(posX, posY) && this.isStarted ){
 				this.hitLeft();
@@ -73,7 +92,7 @@ export default class CoffeeMachine extends Phaser.State{
 		} else if( this.game.input.activePointer.isUp && this.isHitting ){
 			this.isHitting = false;
 
-			this.pacLeft.alpha = this.pacRight.alpha = 0;
+			this.boom.alpha = 0;
 		}
 
 		if(this.isStarted){
@@ -104,7 +123,10 @@ export default class CoffeeMachine extends Phaser.State{
 	}
 
 	hitLeft(){
-		this.pacLeft.alpha = 1;
+		this.boom.alpha = 1;
+		this.boom.position = new Phaser.Point(60, -130);
+		this.boom.scale.setTo(1, 1);
+
 		if(this.isErrorLeft){
 			console.log('hitted error left!');
 			this.hideLeftError();
@@ -116,7 +138,10 @@ export default class CoffeeMachine extends Phaser.State{
 	}
 
 	hitRight(){
-		this.pacRight.alpha = 1;
+		this.boom.alpha = 1;
+		this.boom.position = new Phaser.Point(420, -130);
+		this.boom.scale.setTo(-1, 1);
+
 		if(this.isErrorRight){
 			console.log('hitted error right');
 			this.hideRightError();
@@ -129,15 +154,25 @@ export default class CoffeeMachine extends Phaser.State{
 
 	updateScore(value){
 		if(value > 0){
+			this.light.frame = 1;
 			this.correctHits++;
+
+			if( !(this.correctHits % 4) ) {
+				this.coffee.frame++;
+
+			}
+
 			if(this.correctHits > 10){
-				alert('you win!');
+				// alert('you win!');
+				console.log('win');
 			}
 		} else {
+			this.light.frame = 2;
 			this.missedHits++;
 			console.log('missedHits: ', this.missedHits);
 			if(this.missedHits > 2){
-				alert('you lost!');
+				// alert('you lost!');
+				console.log('you lost');
 			}
 		}
 	}
@@ -156,27 +191,27 @@ export default class CoffeeMachine extends Phaser.State{
 
 	hideLeftError(){
 		this.isErrorLeft = false;
-		this.errorLeft.alpha = 0;
+		this.errorLeft.frame = 0;
 	}
 
 	hideRightError(){
 		this.isErrorRight = false;
-		this.errorRight.alpha = 0;
+		this.errorRight.frame = 0;
 	}
 
 	showLeftError(){
 		this.isErrorLeft = true;
-		this.errorLeft.alpha = 1;
+		this.errorLeft.frame = 1;
 	}
 
 	showRightError(){
 		this.isErrorRight = true;
-		this.errorRight.alpha = 1;
+		this.errorRight.frame = 1;
 	}
 
 	render(){
-		this.game.debug.geom(this.leftButtonRect, 'rgba(255,0,0,0.1');
-		this.game.debug.geom(this.rightButtonRect, 'rgba(255,0,0,0.1');
-		this.game.debug.geom(this.startButtonCircle, 'rgba(0,255,0,0.5');
+		// this.game.debug.geom(this.leftButtonRect, 'rgba(255,0,0,0.1');
+		// this.game.debug.geom(this.rightButtonRect, 'rgba(255,0,0,0.1');
+		// this.game.debug.geom(this.startButtonCircle, 'rgba(0,255,0,0.5');
 	}
 }

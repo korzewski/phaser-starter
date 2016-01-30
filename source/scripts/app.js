@@ -51,7 +51,7 @@ class Preloader extends Phaser.State{
     }
 
     create(){
-        this.game.state.start('Cornflakes');
+        this.game.state.start('CoffeeMachine');
     }
 
 }
