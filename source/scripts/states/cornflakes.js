@@ -1,6 +1,7 @@
 import shuffle from '../utils/shuffle';
 import random from '../utils/random';
 import contains from '../utils/contains';
+import shake from '../utils/shake';
 
 
 
@@ -27,7 +28,7 @@ const _space = 40;
 
 
 
-export default class Cornflakes extends Phaser.State{
+export default class extends Phaser.State{
 	preload() {
 		this.load.image('cornflakes1', 'assets/images/cornflakes_1.png');
 		this.load.image('cornflakes2', 'assets/images/cornflakes_2.png');
@@ -35,11 +36,12 @@ export default class Cornflakes extends Phaser.State{
 		this.load.image('cornflakesBox1', 'assets/images/cornflakes_box_1.png');
 		this.load.image('cornflakesBox2', 'assets/images/cornflakes_box_2.png');
 		this.load.image('cornflakesBox3', 'assets/images/cornflakes_box_3.png');
-		this.load.image('cornflakesBowl', 'assets/images/cornflakes_bowl.png');
+
+		this.load.spritesheet('cornflakesBowl', 'assets/images/cornflakes_bowl.png', 300, 150);
 	}
 
 	createOrder(order) {
-		const orderGroup = this.add.group();
+		const group = this.add.group();
 
 		const background = this.add
 			.graphics()
@@ -51,14 +53,13 @@ export default class Cornflakes extends Phaser.State{
 				this.game.height
 			);
 
-		orderGroup.add(background);
+		group.add(background);
 
 		order = order
 			.map(index => {
-				return this.cornflakes[index].cornflake;
+				return this.vars.cornflakes[index].cornflake;
 			}, this)
 			.forEach((sprite, index) => {
-
 				const cornflake = this.add.sprite(
 					_cornflake.width * 1.5,
 					(index + 1) * _cornflake.height + (index + 1) * _space / 2,
@@ -67,7 +68,7 @@ export default class Cornflakes extends Phaser.State{
 
 				cornflake.anchor.setTo(0.5);
 
-				orderGroup.add(cornflake);
+				group.add(cornflake);
 			});
 	}
 
@@ -90,47 +91,47 @@ export default class Cornflakes extends Phaser.State{
 		const box = this.add.sprite(
 			positions[positionIndex].x,
 			positions[positionIndex].y,
-			this.cornflakes[boxIndex].box
+			this.vars.cornflakes[boxIndex].box
 		)
 
 		box.anchor.setTo(0.5);
 		box.inputEnabled = true;
-    box.events.onInputDown.add(this.addToBowl, { _self: this, index: boxIndex, });
+    box.events.onInputDown.add(this.addToBowl.bind(this, box, boxIndex));
 	}
 
 	createBowl() {
-		const bowl = this.add.sprite(
+		this.objects.bowl = this.add.sprite(
 			this.game.width / 2,
 			this.game.height / 2 + _box.height / 2 + _bowl.height / 2,
 			'cornflakesBowl'
 		);
 
-		bowl.anchor.setTo(0.5);
+		this.objects.bowl.anchor.setTo(0.5);
 	}
 
 	create() {
-		this.cornflakes = [
-			{
-				cornflake: 'cornflakes1',
-				box: 'cornflakesBox1',
-			},
-			{
-				cornflake: 'cornflakes2',
-				box: 'cornflakesBox2',
-			},
-			{
-				cornflake: 'cornflakes3',
-				box: 'cornflakesBox3',
-			},
-		];
+		this.vars = {
+			cornflakes: [
+				{
+					cornflake: 'cornflakes1',
+					box: 'cornflakesBox1',
+				},
+				{
+					cornflake: 'cornflakes2',
+					box: 'cornflakesBox2',
+				},
+				{
+					cornflake: 'cornflakes3',
+					box: 'cornflakesBox3',
+				},
+			],
+			order: random([0, 1, 2], 8),
+			bowl: [],
+		};
 
-		this.order = random([0, 1, 2], 5);
+		this.objects = {};
 
-		this.bowl = [];
-
-
-
-		this.createOrder(this.order);
+		this.createOrder(this.vars.order);
 
 		shuffle([0, 1, 2])
 			.forEach((boxIndex, positionIndex) => {
@@ -144,19 +145,23 @@ export default class Cornflakes extends Phaser.State{
 
 	}
 
-	addToBowl() {
-		this._self.bowl.push(this.index);
+	addToBowl(box, index) {
+		shake(this, box);
 
-		const bowlContains = contains(this._self.bowl, this.index);
-		const orderContains = contains(this._self.order, this.index);
+		this.vars.bowl.push(index);
 
-		if(bowlContains > orderContains) {
-			this._self.lose();
+		this.objects.bowl.frame = this.vars.bowl.length;
+
+		const bowlContains = contains(this.vars.bowl, index);
+		const orderContains = contains(this.vars.order, index);
+
+		if(bowlContains === orderContains && this.vars.bowl.length === this.vars.order.length) {
+			this.win();
 		}
 
 		else {
-			if(bowlContains === orderContains && this._self.bowl.length === this._self.order.length) {
-				this._self.win();
+			if(bowlContains > orderContains) {
+				this.lose();
 			}
 		}
 	}

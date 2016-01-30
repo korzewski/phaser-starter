@@ -1,4 +1,4 @@
-export default function shuffle(array) {
+export default function(array) {
   let counter = array.length;
 
   while(counter > 0) {
