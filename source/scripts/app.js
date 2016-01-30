@@ -1,8 +1,8 @@
-import Game from './classes/Game';
+import Cornflakes from './states/cornflakes';
 
 const settings = {
-    width: 800,
-    height: 600
+    width: 1024,
+    height: 768
 }
 
 class Init extends Phaser.Game {
@@ -10,7 +10,7 @@ class Init extends Phaser.Game {
         super(settings.width, settings.height, Phaser.AUTO, 'game');
         this.state.add('Boot', Boot, false);
         this.state.add('Preloader', Preloader, false);
-        this.state.add('Game', Game, false);
+        this.state.add('Cornflakes', Cornflakes, false);
         this.state.start('Boot');
     }
 }
@@ -43,11 +43,11 @@ class Boot extends Phaser.State {
 
 class Preloader extends Phaser.State{
     preload() {
-        this.game.load.image('example', 'assets/images/example.png');
+
     }
 
     create(){
-        this.game.state.start('Game');
+        this.game.state.start('Cornflakes');
     }
 
 }
