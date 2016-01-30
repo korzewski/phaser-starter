@@ -4,21 +4,29 @@ export default class PooScene extends Phaser.State {
         this.game.load.image('toiletBarCorrect', 'assets/images/toiletBarCorrect.png');
         this.game.load.image('toiletBarBad', 'assets/images/toiletBarBad.png');
         this.game.load.image('toiletMarker', 'assets/images/toiletMarker.png');
+        this.game.load.image('pooManHead', 'assets/images/pooManHead_normal.png');
+        this.game.load.image('pooManHead', 'assets/images/pooManHead_normal.png');
     }
 
     create() {
-        this.pooMan = this.game.add.sprite(0, 0, 'pooMan');
+        this.setPooMan();
         this.setBar();
-
-        this.text1 = this.add.text(this.game.world.centerX / 2 - 20, 0, "");
-        this.text2 = this.add.text(this.game.world.centerX / 2 - 20, 20, "");
-        this.text3 = this.add.text(this.game.world.centerX / 2 - 20, 40, "");
-        this.text4 = this.add.text(this.game.world.centerX / 2 - 20, 60, "");
-
         this.setSceneParameters();
     }
 
+    setPooMan() {
+        this.pooMan = this.game.add.sprite(0, 0, 'pooMan');
+        this.pooManHeadNormal = this.game.add.sprite(565, 290, 'pooManHead');
+        this.pooManHeadNormal.anchor.x = 0.5;
+        this.pooManHeadNormal.anchor.y = 0.5;
+        this.pooManHeadRed = this.game.add.sprite(565, 290, 'pooManHead');
+        this.pooManHeadRed.anchor.x = 0.5;
+        this.pooManHeadRed.anchor.y = 0.5;
+        this.pooManHeadRed.alpha = 0;
+    }
+
     setSceneParameters() {
+        //TODO: Poczatkowy rozmiar paskow czerwonych
         this.minMagneticPowerToCalculate = 5;
         this.minMagneticPower = 5;
         this.maxMagneticPower = 15;
@@ -32,6 +40,10 @@ export default class PooScene extends Phaser.State {
         this.timeInCorrectAreToWin = 3000;
         this.totalTimeForScene = 8000;
         this.startTotalTime = new Date().getTime();
+        this.test = true;
+        this.maxHeadScale = 1.5;
+        this.maxAlpha = 0.5;
+        this.pooManHeadRed.tint = 0x990000;
     }
 
     setBar() {
@@ -51,7 +63,7 @@ export default class PooScene extends Phaser.State {
         this.toiletBarCorrect.x = this.toiletBarMargin + this.toiletBarBadLeft.scale.x;
         this.toiletBarCorrect.scale.x = (this.game.width / 2 - this.toiletBarMargin - this.toiletBarBadRight.width) * 2;
         this.toiletMarker = this.game.add.sprite(0, 0, 'toiletMarker');
-        this.toiletMarker.y = barCenterY;// - this.toiletMarker.height / 2;
+        this.toiletMarker.y = barCenterY;
         this.toiletMarker.x = this.game.width / 2 - this.toiletMarker.width / 2;
     }
 
@@ -80,20 +92,30 @@ export default class PooScene extends Phaser.State {
         } else {
             this.timeInCorrectArea = 0;
             this.shouldSetEnetringTime = true;
+            this.setHeadAnimation(markerCenter);
         }
         var halfGameWidth = this.game.width / 2;
         var markerPower = this.getMarkerPower(halfGameWidth);
-
-        this.text3.setText("timeInCorrectArea: " + this.timeInCorrectArea);
-        this.text1.setText("total Time: " + (new Date().getTime() - this.startTotalTime));
-
         markerPower += this.getPlayerPower(halfGameWidth);
-
-        this.text4.setText("markerPowerWithPlayer: " + markerPower);
         this.toiletMarker.x += markerPower;
+
         if (this.isPlayerLoser()) {
             this.fail();
         }
+    }
+
+    setHeadAnimation(markerCenter) {
+        var distanceToEdge;
+        if (Phaser.Rectangle.containsPoint(this.toiletBarBadLeft, markerCenter)) {
+            distanceToEdge = this.toiletBarBadLeft.x + this.toiletBarBadLeft.width - markerCenter.x;
+        } else {
+            distanceToEdge = markerCenter.x - this.toiletBarBadRight.x;
+        }
+        var scaleValue = distanceToEdge / this.toiletBarBadLeft.width * (this.maxHeadScale - 1) + 1;
+        this.pooManHeadNormal.scale = new Phaser.Point(scaleValue, scaleValue);
+
+        this.pooManHeadRed.scale = new Phaser.Point(scaleValue, scaleValue);
+        this.pooManHeadRed.alpha = distanceToEdge / this.toiletBarBadLeft.width * this.maxAlpha;
     }
 
     isPlayerLoser() {
@@ -120,9 +142,9 @@ export default class PooScene extends Phaser.State {
         if (!this.game.input.mousePointer.isDown) {
             return 0;
         }
-        //this.toiletMarker.x = this.game.input.x;
         var mouseDistanceToCenter = (halfGameWidth - this.game.input.x) * -1;
         return mouseDistanceToCenter / halfGameWidth * this.maxPlayerPower;
+
     }
 
     getRandom(min, max) {
