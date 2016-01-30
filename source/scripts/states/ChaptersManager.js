@@ -10,6 +10,7 @@ export default class ChaptersManager extends Phaser.State{
 			this.game.global = {};
 		}
        	this.game.global.currentChapterIndex = currentIndex;
+       	this.game.global.currentLevel = 1;
 
        	if(this.game.global.currentChapterIndex == -1){
 			this.game.global.chaptersList = shuffle(['CoffeeMachine', 'Cornflakes', 'PooScene']);
