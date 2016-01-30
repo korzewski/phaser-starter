@@ -2,6 +2,7 @@ import shuffle from '../utils/shuffle';
 import random from '../utils/random';
 import contains from '../utils/contains';
 import shake from '../utils/shake';
+import ChaptersManager from './chaptersManager';
 
 
 
@@ -26,7 +27,7 @@ const _bowl = {
 
 
 
-export default class extends Phaser.State{
+export default class extends ChaptersManager{
 	preload() {
 		this.load.image('cornflakesBackground', 'assets/images/cornflakes/background.jpg');
 
@@ -160,25 +161,13 @@ export default class extends Phaser.State{
 		const orderContains = contains(this.vars.order, cornflake);
 
 		if(bowlContains === orderContains && this.vars.bowl.length === this.vars.order.length) {
-			this.win();
+			this.nextChapter();
 		}
 
 		else {
 			if(bowlContains > orderContains) {
-				this.lose();
+				this.gameOver();
 			}
-		}
-	}
-
-	win() {
-		if(confirm('You win!')) {
-			this.state.start('Cornflakes');
-		}
-	}
-
-	lose() {
-		if(confirm('You lose!')) {
-			this.state.start('Cornflakes');
 		}
 	}
 }

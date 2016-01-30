@@ -1,4 +1,6 @@
-export default class CoffeeMachine extends Phaser.State{
+import ChaptersManager from './chaptersManager';
+
+export default class CoffeeMachine extends ChaptersManager{
 	preload(){
 		this.game.load.image('coffeeMachineBg', 'assets/images/coffeeMachine/bg.jpg');
 		this.game.load.image('machine', 'assets/images/coffeeMachine/machine.png');
@@ -12,15 +14,12 @@ export default class CoffeeMachine extends Phaser.State{
 	}
 
 	create(){
-		this.game.stage.backgroundColor = '#ffffff';
-
 		this.game.add.sprite(0, 0, 'coffeeMachineBg');
 
 		this.coffeeMachine = this.game.add.group();
+
 		this.boom = this.game.add.sprite(60, -130, 'boom');
 		this.boom.anchor.setTo(0.5);
-		// this.boom.alpha = 0;
-
 		this.coffeeMachine.add(this.boom);
 
 		this.coffeeMachine.create(0, 0, 'machine');
@@ -28,7 +27,6 @@ export default class CoffeeMachine extends Phaser.State{
 		this.coffee = this.game.add.sprite(137, 224, 'coffee');
 		this.coffeeMachine.add(this.coffee);
 		this.coffee.anchor.setTo(0, 1);
-		// this.coffee.frame = 0;
 
 		this.coffeeMachine.create(137, 0, 'glass');
 
@@ -157,22 +155,20 @@ export default class CoffeeMachine extends Phaser.State{
 			this.light.frame = 1;
 			this.correctHits++;
 
-			if( !(this.correctHits % 4) ) {
+			if( !(this.correctHits % 2) ) {
 				this.coffee.frame++;
 
 			}
 
 			if(this.correctHits > 10){
-				// alert('you win!');
-				console.log('win');
+				this.nextChapter();
 			}
 		} else {
 			this.light.frame = 2;
 			this.missedHits++;
 			console.log('missedHits: ', this.missedHits);
 			if(this.missedHits > 2){
-				// alert('you lost!');
-				console.log('you lost');
+				this.gameOver();
 			}
 		}
 	}

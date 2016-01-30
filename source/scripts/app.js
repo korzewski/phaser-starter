@@ -1,5 +1,7 @@
+import ChaptersManager from './states/ChaptersManager';
 import CoffeeMachine from './states/CoffeeMachine';
 import Cornflakes from './states/cornflakes';
+import PooScene from './states/PooScene';
 
 const settings = {
   width: 1024,
@@ -13,8 +15,10 @@ class Init extends Phaser.Game {
     this.state.add('Boot', Boot, true);
     this.state.add('Preloader', Preloader, false);
 
+    this.state.add('ChaptersManager', ChaptersManager, false);
     this.state.add('CoffeeMachine', CoffeeMachine, false);
     this.state.add('Cornflakes', Cornflakes, false);
+    this.state.add('PooScene', PooScene, false);
   }
 }
 
@@ -38,7 +42,7 @@ class Preloader extends Phaser.State{
   }
 
   create() {
-    this.game.state.start('Cornflakes', true);
+    this.game.state.start('ChaptersManager', true, false, -1);
   }
 }
 
