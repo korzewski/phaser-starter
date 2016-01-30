@@ -1,3 +1,4 @@
+import ChaptersManager from './states/ChaptersManager';
 import CoffeeMachine from './states/CoffeeMachine';
 import Cornflakes from './states/cornflakes';
 
@@ -12,6 +13,7 @@ class Init extends Phaser.Game {
         this.state.add('Boot', Boot, false);
         this.state.add('Preloader', Preloader, false);
 
+        this.state.add('ChaptersManager', ChaptersManager, false);
         this.state.add('CoffeeMachine', CoffeeMachine, false);
         this.state.add('Cornflakes', Cornflakes, false);
 
@@ -51,7 +53,7 @@ class Preloader extends Phaser.State{
     }
 
     create(){
-        this.game.state.start('CoffeeMachine');
+        this.game.state.start('ChaptersManager', true, false, -1);
     }
 
 }
