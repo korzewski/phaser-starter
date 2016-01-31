@@ -152,8 +152,6 @@ export default class extends ChaptersManager {
 	}
 
 	addToBowl(box, position, cornflake) {
-		console.log(this.game.global);
-
 		shake(this, box, position < 1 ? 1 : -1);
 
 		this.vars.bowl.push(cornflake);
