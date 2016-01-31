@@ -1,4 +1,5 @@
-import ChaptersManager from './chaptersManager';
+import ChaptersManager from './chapters_manager';
+
 export default class PooScene extends ChaptersManager {
     preload() {
         this.game.load.image('background', 'assets/images/explosion.png');
@@ -103,7 +104,7 @@ export default class PooScene extends ChaptersManager {
 
     setBar() {
         var barCenterY = this.game.height - 100;
-        var hardnessBarMultiplier = this.game.global.currentLevel * this.game.width / 20;
+        var hardnessBarMultiplier = this.game.global.level * this.game.width / 20;
         this.toiletBarMargin = 20;
         this.toiletBarBadLeft = this.game.add.sprite(0, barCenterY, 'toiletBarBad');
         this.toiletBarBadLeft.x = this.toiletBarMargin;
@@ -145,7 +146,7 @@ export default class PooScene extends ChaptersManager {
         this.toiletMarker.x += markerPower;
 
         if (this.isPlayerLoser()) {
-            this.gameOver();
+            this.lose();
         }
     }
 
