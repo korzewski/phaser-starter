@@ -1,66 +1,57 @@
+import ChaptersManager from './states/chapters_manager';
 import CoffeeMachine from './states/CoffeeMachine';
 import Cornflakes from './states/cornflakes';
+import Toilet from './states/PooScene';
 
 const settings = {
-    width: 1024,
-    height: 768
+  width: 1024,
+  height: 768,
 }
 
 class Init extends Phaser.Game {
-    constructor() {
-        super(settings.width, settings.height, Phaser.AUTO, 'game');
-        this.state.add('Boot', Boot, false);
-        this.state.add('Preloader', Preloader, false);
+  constructor() {
+    super(settings.width, settings.height, Phaser.AUTO, 'game');
 
-        this.state.add('CoffeeMachine', CoffeeMachine, false);
-        this.state.add('Cornflakes', Cornflakes, false);
+    this.state.add('Boot', Boot, true);
+    this.state.add('Preloader', Preloader, false);
 
-        this.state.start('Boot');
-    }
+    this.state.add('ChaptersManager', ChaptersManager, false);
+    this.state.add('CoffeeMachine', CoffeeMachine, false);
+    this.state.add('Cornflakes', Cornflakes, false);
+    this.state.add('Toilet', Toilet, false);
+  }
 }
 
 class Boot extends Phaser.State {
-    create() {
-        this.input.maxPointers = 1;
-        this.stage.disableVisibilityChange = true;
+  create() {
+    this.scaleMode = this.scale.RESIZE;
+    // this.scale.startFullScreen(true);
 
-        if (this.game.device.desktop) {
-            this.scale.pageAlignHorizontally = true;
-            this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-            this.scale.maxWidth = settings.width + settings.width/2;
-            this.scale.maxHeight = settings.height + settings.height/2;
-        } else {
-            // mobile settings
-            this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-            this.scale.minWidth = 480;
-            this.scale.minHeight = 260;
-            this.scale.maxWidth = 1024;
-            this.scale.maxHeight = 768;
-            this.scale.forceLandscape = true;
-            this.scale.pageAlignHorizontally = true;
-            this.scale.refresh();
-        }
+    this.scale.refresh();
 
-        this.game.state.start('Preloader', true, false);
-    }
+    this.state.start('Preloader', true, true);
+  }
 }
 
 class Preloader extends Phaser.State{
-    preload() {
+  preload() {
+    // preload all images in future
 
-    }
+    this.load.audio('theme', 'assets/audio/theme.mp3');
+  }
 
-<<<<<<< Updated upstream
-    create(){
-        this.game.state.start('CoffeeMachine');
-    }
-=======
-    this.game.global.audio = this.add.audio('theme', 2, true, true);
-    this.game.global.audio.onDecoded.add(() => {
-      // this.game.global.audio.fadeIn(100);
-    }, this);
->>>>>>> Stashed changes
+  create() {
+        if(!this.game.global) {
+          this.game.global = {};
+        }
 
+        this.game.global.audio = this.add.audio('theme', 2, true, true);
+        this.game.global.audio.onDecoded.add(() => {
+            this.game.global.audio.fadeIn(100);
+            this.state.start('ChaptersManager', true, false, -1);
+        }, this);
+
+  }
 }
 
 new Init();

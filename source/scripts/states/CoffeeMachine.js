@@ -1,4 +1,6 @@
-export default class CoffeeMachine extends Phaser.State{
+import ChaptersManager from './chapters_manager';
+
+export default class CoffeeMachine extends ChaptersManager{
 	preload(){
 		this.game.load.image('coffeeMachineBg', 'assets/images/coffeeMachine/bg.jpg');
 		this.game.load.image('machine', 'assets/images/coffeeMachine/machine.png');
@@ -9,26 +11,19 @@ export default class CoffeeMachine extends Phaser.State{
 		this.game.load.spritesheet('error', 'assets/images/coffeeMachine/error.png', 98, 49);
 		this.game.load.spritesheet('light', 'assets/images/coffeeMachine/light.png', 21, 22);
 		this.game.load.spritesheet('coffee', 'assets/images/coffeeMachine/coffee.png', 203, 203);
+
+		this.game.load.spritesheet('explosion', 'assets/images/coffeeMachine/explosion.png', 438, 440.44444);
 	}
 
 	create(){
-<<<<<<< Updated upstream
-		this.game.stage.backgroundColor = '#ffffff';
-
-		this.game.add.sprite(0, 0, 'coffeeMachineBg');
-=======
 		this.bg = this.game.add.sprite(0, 0, 'coffeeMachineBg');
->>>>>>> Stashed changes
 
 		this.coffeeMachine = this.game.add.group();
+
 		this.boom = this.game.add.sprite(60, -130, 'boom');
 		this.boom.anchor.setTo(0.5);
-<<<<<<< Updated upstream
-		// this.boom.alpha = 0;
-
-=======
 		this.boom.alpha = 0;
->>>>>>> Stashed changes
+
 		this.coffeeMachine.add(this.boom);
 
 		this.coffeeMachine.create(0, 0, 'machine');
@@ -36,7 +31,6 @@ export default class CoffeeMachine extends Phaser.State{
 		this.coffee = this.game.add.sprite(137, 224, 'coffee');
 		this.coffeeMachine.add(this.coffee);
 		this.coffee.anchor.setTo(0, 1);
-		// this.coffee.frame = 0;
 
 		this.coffeeMachine.create(137, 0, 'glass');
 
@@ -163,31 +157,23 @@ export default class CoffeeMachine extends Phaser.State{
 			this.light.frame = 1;
 			this.correctHits++;
 
-			if( !(this.correctHits % 4) ) {
+			if( !(this.correctHits % 2) ) {
 				this.coffee.frame++;
 			}
 
-<<<<<<< Updated upstream
-			if(this.correctHits > 10){
-				// alert('you win!');
-				console.log('win');
-=======
 			if(this.correctHits > 9){
 				this.nextChapter();
->>>>>>> Stashed changes
+				console.log(this.game.global);
+
+				this.nextChapter();
 			}
 		} else {
 			this.light.frame = 2;
 			this.missedHits++;
 			console.log('missedHits: ', this.missedHits);
 			if(this.missedHits > 2){
-<<<<<<< Updated upstream
-				// alert('you lost!');
-				console.log('you lost');
-=======
 				this.isStarted = false;
 				this.addExplosion();
->>>>>>> Stashed changes
 			}
 		}
 	}

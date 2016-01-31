@@ -17,9 +17,9 @@ export default class extends Phaser.State{
 		this.game.global.level = 1;
 		this.game.global.chapter = index;
 
+
     	if(this.game.global.chapter < 0) {
-			// this.game.global.chapters = shuffle(['CoffeeMachine', 'Cornflakes', 'Toilet']);
-			this.game.global.chapters = shuffle(['CoffeeMachine']);
+			this.game.global.chapters = shuffle(['CoffeeMachine', 'Cornflakes', 'Toilet']);
 
 			this.nextChapter();
     	}
