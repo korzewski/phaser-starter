@@ -1,4 +1,5 @@
-import ChaptersManager from './chaptersManager';
+import ChaptersManager from './chapters_manager';
+
 export default class PooScene extends ChaptersManager {
     preload() {
         this.game.load.image('background', 'assets/images/explosion.png');
@@ -80,7 +81,7 @@ export default class PooScene extends ChaptersManager {
         this.faceOnlyRed = this.setHeadSprites(this.faceOnlyRed, true);
         this.faceOnlyRed.alpha = 0;
         this.pooManHeadNormal.add(this.faceOnlyRed);
-        
+
         var allHair = this.game.add.sprite(/*this.pooMan.width / 2*/0, 0, 'head', 1);
 
         allHair = this.setHeadSprites(allHair, false);
@@ -158,7 +159,7 @@ export default class PooScene extends ChaptersManager {
 
     setBar() {
         var barCenterY = this.game.height - 100;
-        var hardnessBarMultiplier = this.game.global.currentLevel * this.game.width / 20;
+        var hardnessBarMultiplier = this.game.global.level * this.game.width / 20;
         this.toiletBarMargin = 20;
         this.toiletBarBadLeft = this.game.add.sprite(0, barCenterY, 'toiletBarBad');
         this.toiletBarBadLeft.x = this.toiletBarMargin;
@@ -182,6 +183,7 @@ export default class PooScene extends ChaptersManager {
             return;
         }
         if (this.timeInCorrectAreToWin < this.timeInCorrectArea) {
+            this.nextChapter();
         }
         var markerCenter = new Phaser.Point(this.toiletMarker.x + this.toiletMarker.width / 2,
             this.toiletMarker.y + this.toiletMarker.height / 2);
@@ -311,7 +313,7 @@ export default class PooScene extends ChaptersManager {
         var tween11 = this.game.add.tween(this.janusz11);
         tween11.to( {x : this.janusz11.x - 130, y : this.janusz11.y - 110, angle : 20}, animTime, "Quart.easeOut", false);
 
-        tween11.onComplete.add(this.gameOver, this);
+        tween11.onComplete.add(this.lose, this);
 
         tween1.start();
         tween2.start();

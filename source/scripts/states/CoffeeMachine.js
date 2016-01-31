@@ -1,4 +1,4 @@
-import ChaptersManager from './chaptersManager';
+import ChaptersManager from './chapters_manager';
 
 export default class CoffeeMachine extends ChaptersManager{
 	preload(){
@@ -163,6 +163,8 @@ export default class CoffeeMachine extends ChaptersManager{
 			}
 
 			if(this.correctHits > 10){
+				console.log(this.game.global);
+
 				this.nextChapter();
 			}
 		} else {
@@ -174,7 +176,7 @@ export default class CoffeeMachine extends ChaptersManager{
 				explosion.scale.x = 1;
 				explosion.scale.y = 1;
 				var anim = explosion.animations.add('explode');
-				anim.onComplete.add(function () { this.gameOver(); }, this);
+				anim.onComplete.add(function () { this.lose(); }, this);
 				anim.play(20, false);
 			}
 		}
