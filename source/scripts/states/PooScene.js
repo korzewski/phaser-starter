@@ -1,4 +1,5 @@
-import ChaptersManager from './chaptersManager';
+import ChaptersManager from './chapters_manager';
+
 export default class PooScene extends ChaptersManager {
     preload() {
         this.game.load.image('pooMan', 'assets/images/pooMan.JPG');
@@ -91,7 +92,7 @@ export default class PooScene extends ChaptersManager {
         this.toiletMarker.x += markerPower;
 
         if (this.isPlayerLoser()) {
-            this.gameOver();
+            this.lose();
         }
     }
 

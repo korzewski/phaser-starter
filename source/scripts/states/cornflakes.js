@@ -1,8 +1,9 @@
+import ChaptersManager from './chapters_manager';
+
 import shuffle from '../utils/shuffle';
 import random from '../utils/random';
 import contains from '../utils/contains';
 import shake from '../utils/shake';
-import ChaptersManager from './chaptersManager';
 
 
 
@@ -27,7 +28,7 @@ const _bowl = {
 
 
 
-export default class extends ChaptersManager{
+export default class extends ChaptersManager {
 	preload() {
 		this.load.image('cornflakesBackground', 'assets/images/cornflakes/background.jpg');
 
@@ -166,7 +167,7 @@ export default class extends ChaptersManager{
 
 		else {
 			if(bowlContains > orderContains) {
-				this.gameOver();
+				this.lose();
 			}
 		}
 	}

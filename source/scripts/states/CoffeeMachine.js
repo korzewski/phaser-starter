@@ -1,4 +1,4 @@
-import ChaptersManager from './chaptersManager';
+import ChaptersManager from './chapters_manager';
 
 export default class CoffeeMachine extends ChaptersManager{
 	preload(){
@@ -168,7 +168,7 @@ export default class CoffeeMachine extends ChaptersManager{
 			this.missedHits++;
 			console.log('missedHits: ', this.missedHits);
 			if(this.missedHits > 2){
-				this.gameOver();
+				this.lose();
 			}
 		}
 	}
