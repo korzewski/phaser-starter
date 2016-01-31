@@ -34,7 +34,7 @@ export default class extends Phaser.State{
 				this.global.chapters[this.global.chapter],
 				true,
 				false,
-				this.game.global.chapter
+				this.global.chapter
 			);
 		}
 
