@@ -41,12 +41,12 @@ class Preloader extends Phaser.State{
   }
 
   create() {
-    if(!this.global) {
-      this.global = {};
+    if(!this.game.global) {
+      this.game.global = {};
     }
 
-    this.global.audio = this.add.audio('theme', 2, true, true);
-    this.global.audio.play();
+    this.game.global.audio = this.add.audio('theme', 2, true, true);
+    this.game.global.audio.play();
 
     this.state.start('ChaptersManager', true, false, -1);
   }
