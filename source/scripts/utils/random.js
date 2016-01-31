@@ -1,4 +1,4 @@
-export default function random(array, amount) {
+export default function(array, amount) {
   let newArray = [];
 
   while(amount > 0) {

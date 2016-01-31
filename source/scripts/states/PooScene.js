@@ -1,4 +1,5 @@
-export default class PooScene extends Phaser.State {
+import ChaptersManager from './chaptersManager';
+export default class PooScene extends ChaptersManager {
     preload() {
         this.game.load.image('background', 'assets/images/explosion.png');
         this.game.load.image('pooMan', 'assets/images/pooMan/01.png');
@@ -159,7 +160,7 @@ export default class PooScene extends Phaser.State {
 
     setBar() {
         var barCenterY = this.game.height - 100;
-        var hardnessBarMultiplier = this.game.settings.level * this.game.width / 20;
+        var hardnessBarMultiplier = this.game.global.currentLevel * this.game.width / 20;
         this.toiletBarMargin = 20;
         this.toiletBarBadLeft = this.game.add.sprite(0, barCenterY, 'toiletBarBad');
         this.toiletBarBadLeft.x = this.toiletBarMargin;
@@ -178,19 +179,9 @@ export default class PooScene extends Phaser.State {
         this.toiletMarker.x = this.game.width / 2 - this.toiletMarker.width / 2;
     }
 
-    fail() {
-        this.game.settings.level = Math.max(this.game.settings.level - 1, 1);
-        this.game.state.start('PooScene');
-    };
-
-    win() {
-        this.game.settings.level += 1;
-        this.game.state.start('PooScene');
-    };
-
     update() {
         if (this.timeInCorrectAreToWin < this.timeInCorrectArea) {
-            this.win();
+            this.nextChapter();
         }
         var markerCenter = new Phaser.Point(this.toiletMarker.x + this.toiletMarker.width / 2,
             this.toiletMarker.y + this.toiletMarker.height / 2);
@@ -211,7 +202,7 @@ export default class PooScene extends Phaser.State {
         this.toiletMarker.x += markerPower;
 
         if (this.isPlayerLoser()) {
-            this.fail();
+            this.gameOver();
         }
     }
 

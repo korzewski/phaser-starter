@@ -1,175 +1,173 @@
 import shuffle from '../utils/shuffle';
 import random from '../utils/random';
 import contains from '../utils/contains';
+import shake from '../utils/shake';
+import ChaptersManager from './chaptersManager';
 
 
 
 
 
 const _cornflake = {
-	width: 60,
-	height: 60,
+	width: 75,
+	height: 75,
 };
 
 const _box = {
-	width: 200,
-	height: 300,
+	width: 230,
+	height: 235,
 };
 
 const _bowl = {
-	width: 300,
-	height: 150,
+	width: 135,
+	height: 105,
 };
 
-const _space = 40;
 
 
 
 
-
-export default class Cornflakes extends Phaser.State{
+export default class extends ChaptersManager{
 	preload() {
-		this.load.image('cornflakes1', 'assets/images/cornflakes_1.png');
-		this.load.image('cornflakes2', 'assets/images/cornflakes_2.png');
-		this.load.image('cornflakes3', 'assets/images/cornflakes_3.png');
-		this.load.image('cornflakesBox1', 'assets/images/cornflakes_box_1.png');
-		this.load.image('cornflakesBox2', 'assets/images/cornflakes_box_2.png');
-		this.load.image('cornflakesBox3', 'assets/images/cornflakes_box_3.png');
-		this.load.image('cornflakesBowl', 'assets/images/cornflakes_bowl.png');
+		this.load.image('cornflakesBackground', 'assets/images/cornflakes/background.jpg');
+
+		this.load.spritesheet('cornflakesCornflake', 'assets/images/cornflakes/cornflake.png', _cornflake.width, _cornflake.height);
+		this.load.spritesheet('cornflakesBox', 'assets/images/cornflakes/box.png', _box.width, _box.height);
+		this.load.spritesheet('cornflakesLabel', 'assets/images/cornflakes/label.png', _box.width, _box.height);
+		this.load.spritesheet('cornflakesBowl', 'assets/images/cornflakes/bowl.png', _bowl.width, _bowl.height);
 	}
 
 	createOrder(order) {
-		const orderGroup = this.add.group();
+		const group = this.add.group();
 
-		const background = this.add
+		const background1 = this.add
 			.graphics()
-			.beginFill(0xffffff, 0.25)
+			.beginFill(0xedd2a6, 1)
 	  	.drawRect(
 				0,
 				0,
-				_cornflake.width * 3,
+				_cornflake.width + 20 * 2,
 				this.game.height
 			);
 
-		orderGroup.add(background);
+		const background2 = this.add
+			.graphics()
+			.beginFill(0xa0918d, 1)
+	  	.drawRect(
+				10,
+				10,
+				_cornflake.width + 20,
+				this.game.height - 20
+			);
 
-		order = order
-			.map(index => {
-				return this.cornflakes[index].cornflake;
-			}, this)
-			.forEach((sprite, index) => {
+		group.add(background1);
+		group.add(background2);
 
+		order
+			.forEach((type, index) => {
 				const cornflake = this.add.sprite(
-					_cornflake.width * 1.5,
-					(index + 1) * _cornflake.height + (index + 1) * _space / 2,
-					sprite
+					20,
+					20 + index * _cornflake.height,
+					'cornflakesCornflake',
+					type
 				);
 
-				cornflake.anchor.setTo(0.5);
-
-				orderGroup.add(cornflake);
-			});
+				group.add(cornflake);
+			}, this);
 	}
 
-	createBox(boxIndex, positionIndex) {
-		const positions = [
-			{
-				x: this.game.width / 2 - _box.width - _space,
-				y: this.game.height / 2 - _space,
-			},
-			{
-				x: this.game.width / 2,
-				y: this.game.height / 2 - _space,
-			},
-			{
-				x: this.game.width / 2 + _box.width + _space,
-				y: this.game.height / 2 - _space,
-			},
-		];
+	createBackground() {
+		const background = this.add.sprite(
+			0,
+			0,
+			'cornflakesBackground',
+		);
+	}
+
+	createBox(position, cornflake) {
+		const group = this.add.group();
+
+		group.x = _box.width / 2 + _box.width * position;
+		group.y = _box.height / 2;
 
 		const box = this.add.sprite(
-			positions[positionIndex].x,
-			positions[positionIndex].y,
-			this.cornflakes[boxIndex].box
-		)
+			_box.width / -2,
+			_box.height / -2,
+			'cornflakesBox',
+			position
+		);
 
-		box.anchor.setTo(0.5);
+		const label = this.add.sprite(
+			_box.width / -2 + (position < 1 ? 15 : (position > 1 ? -15 : 0)),
+			_box.height / -2,
+			'cornflakesLabel',
+			cornflake
+		);
+
 		box.inputEnabled = true;
-    box.events.onInputDown.add(this.addToBowl, { _self: this, index: boxIndex, });
+    box.events.onInputDown.add(this.addToBowl.bind(this, group, position, cornflake));
+
+		group.add(box);
+		group.add(label);
+
+		return group;
 	}
 
 	createBowl() {
 		const bowl = this.add.sprite(
-			this.game.width / 2,
-			this.game.height / 2 + _box.height / 2 + _bowl.height / 2,
+			_box.width * 1.5,
+			_box.height + _bowl.height / 2,
 			'cornflakesBowl'
 		);
 
 		bowl.anchor.setTo(0.5);
+
+		this.objects.bowl = bowl;
+
+		return bowl;
 	}
 
 	create() {
-		this.cornflakes = [
-			{
-				cornflake: 'cornflakes1',
-				box: 'cornflakesBox1',
-			},
-			{
-				cornflake: 'cornflakes2',
-				box: 'cornflakesBox2',
-			},
-			{
-				cornflake: 'cornflakes3',
-				box: 'cornflakesBox3',
-			},
-		];
+		this.objects = {};
+		this.vars = {
+			order: random([0, 1, 2], 6),
+			bowl: [],
+		};
 
-		this.order = random([0, 1, 2], 5);
+		this.createBackground();
+		this.createOrder(this.vars.order);
 
-		this.bowl = [];
+		const group = this.add.group();
 
-
-
-		this.createOrder(this.order);
+		group.x = this.game.width / 2 - 310;
+		group.y = this.game.height / 2 - 45;
 
 		shuffle([0, 1, 2])
-			.forEach((boxIndex, positionIndex) => {
-				this.createBox(boxIndex, positionIndex);
+			.forEach((cornflake, position) => {
+				group.add(this.createBox(position, cornflake));
 			}, this);
 
-		this.createBowl();
+		group.add(this.createBowl());
 	}
 
-	update() {
+	addToBowl(box, position, cornflake) {
+		shake(this, box, position < 1 ? 1 : -1);
 
-	}
+		this.vars.bowl.push(cornflake);
 
-	addToBowl() {
-		this._self.bowl.push(this.index);
+		this.objects.bowl.frame = this.vars.bowl.length;
 
-		const bowlContains = contains(this._self.bowl, this.index);
-		const orderContains = contains(this._self.order, this.index);
+		const bowlContains = contains(this.vars.bowl, cornflake);
+		const orderContains = contains(this.vars.order, cornflake);
 
-		if(bowlContains > orderContains) {
-			this._self.lose();
+		if(bowlContains === orderContains && this.vars.bowl.length === this.vars.order.length) {
+			this.nextChapter();
 		}
 
 		else {
-			if(bowlContains === orderContains && this._self.bowl.length === this._self.order.length) {
-				this._self.win();
+			if(bowlContains > orderContains) {
+				this.gameOver();
 			}
-		}
-	}
-
-	win() {
-		if(confirm('You win!')) {
-			this.state.start('Cornflakes');
-		}
-	}
-
-	lose() {
-		if(confirm('You lose!')) {
-			this.state.start('Cornflakes');
 		}
 	}
 }
