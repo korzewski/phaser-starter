@@ -26,34 +26,33 @@ export default class PooScene extends ChaptersManager {
         this.pooManGroup.add(this.pooMan);
 
         this.setNormalHead();
-        this.setRedHead();
+        //this.setRedHead();
 
         this.pooManGroup.add(this.pooManHeadNormal);
-        this.pooManGroup.add(this.pooManHeadRed);
+        //this.pooManGroup.add(this.pooManHeadRed);
 
-        this.pooManHeadRed.x = 155;
-        this.pooManHeadRed.y = 78;
+        //this.pooManHeadRed.x = 155;
+        //this.pooManHeadRed.y = 78;
         this.pooManHeadNormal.x = 155;
         this.pooManHeadNormal.y = 78;
 
         var headHeightAboveBody = this.pooManHeadNormal.y - this.pooMan.y;
         var groupHeight = headHeightAboveBody + this.pooMan.height;
 
-        this.pooManGroup.x = this.game.world.width / 2 - this.pooMan.width;
+
+        this.pooManGroup.x = this.game.world.width / 2 - this.pooMan.width / 2;
         this.pooManGroup.y = this.game.world.height / 2 - groupHeight / 2;
     }
 
     setRedHead() {
-        this.pooManHeadRed = this.game.add.group();
-        this.pooManHeadRed.alpha = 0;
+        //this.pooManHeadRed = this.game.add.group();
+        //this.pooManHeadRed.alpha = 0;
 
-        var faceOnly = this.game.add.sprite(0, 0, 'head', 0);
-        faceOnly = this.setHeadSprites(faceOnly, true);
-        this.pooManHeadRed.add(faceOnly);
+
 
         var allHair = this.game.add.sprite(0, 0, 'head', 1);
         allHair = this.setHeadSprites(allHair, false);
-        this.pooManHeadRed.add(allHair);
+        //this.pooManHeadRed.add(allHair);
     }
 
     setNormalHead() {
@@ -62,6 +61,11 @@ export default class PooScene extends ChaptersManager {
         var faceOnly = this.game.add.sprite(/*this.pooMan.width / 2*/0, 0, 'head', 0);
         faceOnly = this.setHeadSprites(faceOnly, false);
         this.pooManHeadNormal.add(faceOnly);
+
+        this.faceOnlyRed = this.game.add.sprite(0, 0, 'head', 0);
+        this.faceOnlyRed = this.setHeadSprites(this.faceOnlyRed, true);
+        this.faceOnlyRed.alpha = 0;
+        this.pooManHeadNormal.add(this.faceOnlyRed);
 
         var allHair = this.game.add.sprite(/*this.pooMan.width / 2*/0, 0, 'head', 1);
         allHair = this.setHeadSprites(allHair, false);
@@ -155,8 +159,8 @@ export default class PooScene extends ChaptersManager {
         var scaleValue = distanceToEdge / this.toiletBarBadLeft.width * (this.maxHeadScale - 1) + 1;
         this.pooManHeadNormal.scale = new Phaser.Point(scaleValue, scaleValue);
 
-        this.pooManHeadRed.scale = new Phaser.Point(scaleValue, scaleValue);
-        this.pooManHeadRed.alpha = distanceToEdge / this.toiletBarBadLeft.width * this.maxAlpha;
+        //this.pooManHeadRed.scale = new Phaser.Point(scaleValue, scaleValue);
+        this.faceOnlyRed.alpha = distanceToEdge / this.toiletBarBadLeft.width * this.maxAlpha;
     }
 
     isPlayerLoser() {
