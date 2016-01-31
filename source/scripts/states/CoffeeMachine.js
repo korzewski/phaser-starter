@@ -12,15 +12,23 @@ export default class CoffeeMachine extends Phaser.State{
 	}
 
 	create(){
+<<<<<<< Updated upstream
 		this.game.stage.backgroundColor = '#ffffff';
 
 		this.game.add.sprite(0, 0, 'coffeeMachineBg');
+=======
+		this.bg = this.game.add.sprite(0, 0, 'coffeeMachineBg');
+>>>>>>> Stashed changes
 
 		this.coffeeMachine = this.game.add.group();
 		this.boom = this.game.add.sprite(60, -130, 'boom');
 		this.boom.anchor.setTo(0.5);
+<<<<<<< Updated upstream
 		// this.boom.alpha = 0;
 
+=======
+		this.boom.alpha = 0;
+>>>>>>> Stashed changes
 		this.coffeeMachine.add(this.boom);
 
 		this.coffeeMachine.create(0, 0, 'machine');
@@ -107,17 +115,19 @@ export default class CoffeeMachine extends Phaser.State{
 	}
 
 	updateErrors(){
-		if( this.game.rnd.integerInRange(0, 1) ){
-			if(this.isErrorLeft){
-				this.loseLeftError();
+		if(this.isStarted){
+			if( this.game.rnd.integerInRange(0, 1) ){
+				if(this.isErrorLeft){
+					this.loseLeftError();
+				} else {
+					this.showLeftError();
+				}
 			} else {
-				this.showLeftError();
-			}
-		} else {
-			if(this.isErrorRight){
-				this.loseRightError();
-			} else {
-				this.showRightError();
+				if(this.isErrorRight){
+					this.loseRightError();
+				} else {
+					this.showRightError();
+				}
 			}
 		}
 	}
@@ -128,11 +138,9 @@ export default class CoffeeMachine extends Phaser.State{
 		this.boom.scale.setTo(1, 1);
 
 		if(this.isErrorLeft){
-			console.log('hitted error left!');
 			this.hideLeftError();
 			this.updateScore(1);
 		} else {
-			console.log('missed error left!');
 			this.updateScore(-1);
 		}
 	}
@@ -143,11 +151,9 @@ export default class CoffeeMachine extends Phaser.State{
 		this.boom.scale.setTo(-1, 1);
 
 		if(this.isErrorRight){
-			console.log('hitted error right');
 			this.hideRightError();
 			this.updateScore(1);
 		} else {
-			console.log('missed error right');
 			this.updateScore(-1);
 		}
 	}
@@ -159,32 +165,53 @@ export default class CoffeeMachine extends Phaser.State{
 
 			if( !(this.correctHits % 4) ) {
 				this.coffee.frame++;
-
 			}
 
+<<<<<<< Updated upstream
 			if(this.correctHits > 10){
 				// alert('you win!');
 				console.log('win');
+=======
+			if(this.correctHits > 9){
+				this.nextChapter();
+>>>>>>> Stashed changes
 			}
 		} else {
 			this.light.frame = 2;
 			this.missedHits++;
 			console.log('missedHits: ', this.missedHits);
 			if(this.missedHits > 2){
+<<<<<<< Updated upstream
 				// alert('you lost!');
 				console.log('you lost');
+=======
+				this.isStarted = false;
+				this.addExplosion();
+>>>>>>> Stashed changes
 			}
 		}
 	}
 
+	addExplosion(){
+		this.hideLeftError();
+		this.hideRightError();
+		var explosion = this.game.add.sprite(this.coffeeMachine.x + 250, this.coffeeMachine.y + 90, 'explosion');
+		explosion.anchor.setTo(0.5);
+		explosion.scale.setTo(5);
+		var anim = explosion.animations.add('explode');
+		anim.onComplete.add(function () { this.lose(); }, this);
+		anim.play(17, false);
+
+		this.game.add.tween(this.bg).to({ alpha: 0.01 }, 400, Phaser.Easing.Out, true);
+		this.game.add.tween(this.coffeeMachine).to({ alpha: 0.01 }, 400, 'Linear', true);
+	}
+
 	loseLeftError(){
-		console.log('lose error left');
 		this.hideLeftError();
 		this.updateScore(-1);
 	}
 
 	loseRightError(){
-		console.log('lose error right');
 		this.hideRightError();
 		this.updateScore(-1);
 	}
