@@ -11,6 +11,8 @@ export default class CoffeeMachine extends ChaptersManager{
 		this.game.load.spritesheet('error', 'assets/images/coffeeMachine/error.png', 98, 49);
 		this.game.load.spritesheet('light', 'assets/images/coffeeMachine/light.png', 21, 22);
 		this.game.load.spritesheet('coffee', 'assets/images/coffeeMachine/coffee.png', 203, 203);
+
+		this.game.load.spritesheet('explosion', 'assets/images/coffeeMachine/explosion.png', 438, 440.44444);
 	}
 
 	create(){
@@ -170,7 +172,12 @@ export default class CoffeeMachine extends ChaptersManager{
 			this.missedHits++;
 			console.log('missedHits: ', this.missedHits);
 			if(this.missedHits > 2){
-				this.lose();
+				var explosion = this.game.add.sprite(this.coffeeMachine.x, this.coffeeMachine.y - 150, 'explosion');
+				explosion.scale.x = 1;
+				explosion.scale.y = 1;
+				var anim = explosion.animations.add('explode');
+				anim.onComplete.add(function () { this.lose(); }, this);
+				anim.play(20, false);
 			}
 		}
 	}
