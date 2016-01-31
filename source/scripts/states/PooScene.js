@@ -1,39 +1,150 @@
 import ChaptersManager from './chaptersManager';
 export default class PooScene extends ChaptersManager {
     preload() {
-        this.game.load.image('pooMan', 'assets/images/pooMan.JPG');
-        this.game.load.image('toiletBarCorrect', 'assets/images/toiletBarCorrect.png');
-        this.game.load.image('toiletBarBad', 'assets/images/toiletBarBad.png');
-        this.game.load.image('toiletMarker', 'assets/images/toiletMarker.png');
-        this.game.load.image('pooManHead', 'assets/images/pooManHead_normal.png');
-        this.game.load.image('pooManHead', 'assets/images/pooManHead_normal.png');
+        this.game.load.image('background', 'assets/images/explosion.png');
+        this.game.load.image('pooMan', 'assets/images/pooMan/01.png');
+        this.game.load.image('toiletBarCorrect', 'assets/images/pooMan/toiletBarCorrect.png');
+        this.game.load.image('toiletBarBad', 'assets/images/pooMan/toiletBarBad.png');
+        this.game.load.image('toiletMarker', 'assets/images/pooMan/toiletMarker.png');
+        this.game.load.image('hair', 'assets/images/pooMan/02.png');
+        this.game.load.image('face', 'assets/images/pooMan/03.png');
+        this.game.load.image('eyelashes', 'assets/images/pooMan/04.png');
+        this.game.load.image('leftEye', 'assets/images/pooMan/05.png');
+        this.game.load.image('underEyeSkin', 'assets/images/pooMan/06.png');
+        this.game.load.image('rightEye', 'assets/images/pooMan/07.png');
+        this.game.load.image('leftEyeBrow', 'assets/images/pooMan/08.png');
+        this.game.load.image('rightEyeBrow', 'assets/images/pooMan/09.png');
+        this.game.load.image('moustache', 'assets/images/pooMan/10.png');
+        this.game.load.image('lips', 'assets/images/pooMan/11.png');
+        //this.game.load.spritesheet('explosion', 'assets/images/explosion.png', 46.25, 37.5, 62);
     }
 
     create() {
         this.setSceneParameters();
         this.setPooMan();
         this.setBar();
+        //this.explosion = this.game.add.sprite(0, 0, 'explosion');
+        //this.explosion.animations.add('explode');
+        //this.explosion.play('explode', 60, true);
     }
 
     setPooMan() {
-        this.pooMan = this.game.add.sprite(0, 0, 'pooMan');
-        this.pooManHeadNormal = this.game.add.sprite(565, 290, 'pooManHead');
-        this.pooManHeadNormal.anchor.x = 0.5;
-        this.pooManHeadNormal.anchor.y = 0.5;
-        this.pooManHeadRed = this.game.add.sprite(565, 290, 'pooManHead');
-        this.pooManHeadRed.anchor.x = 0.5;
-        this.pooManHeadRed.anchor.y = 0.5;
+        this.game.add.sprite(0, 0, 'background');
+        this.pooManGroup = this.game.add.group();
+        this.pooManGroup.create(0, 0, 'pooMan');
+
+        this.setNormalHead();
+        this.setRedHead();
+
+        this.pooManGroup.add(this.pooManHeadNormal);
+        this.pooManGroup.add(this.pooManHeadRed);
+    }
+
+    setRedHead() {
+        this.pooManHeadRed = this.game.add.group();
         this.pooManHeadRed.alpha = 0;
-        this.pooManHeadRed.tint = 0x990000;
+
+        var face = this.game.add.sprite(0, 0, 'face');
+        face = this.setHeadSprites(face, true);
+        this.pooManHeadRed.add(face);
+
+        var hair = this.game.add.sprite(0, 0, 'hair');
+        hair = this.setHeadSprites(hair, true);
+        this.pooManHeadRed.add(hair);
+
+        var leftEyeBrow = this.game.add.sprite(0, 0, 'leftEyeBrow');
+        leftEyeBrow = this.setHeadSprites(leftEyeBrow, false);
+        this.pooManHeadRed.add(leftEyeBrow);
+
+        var rightEyeBrow = this.game.add.sprite(0, 0, 'rightEyeBrow');
+        rightEyeBrow = this.setHeadSprites(rightEyeBrow, false);
+        this.pooManHeadRed.add(rightEyeBrow);
+
+        var eyelashes = this.game.add.sprite(0, 0, 'eyelashes');
+        eyelashes = this.setHeadSprites(eyelashes, false);
+        this.pooManHeadRed.add(eyelashes);
+
+        var leftEye = this.game.add.sprite(0, 0, 'leftEye');
+        leftEye = this.setHeadSprites(leftEye, false);
+        this.pooManHeadRed.add(leftEye);
+
+        var rightEye = this.game.add.sprite(0, 0, 'rightEye');
+        rightEye = this.setHeadSprites(rightEye, false);
+        this.pooManHeadRed.add(rightEye);
+
+        var underEyeSkin = this.game.add.sprite(0, 0, 'underEyeSkin');
+        underEyeSkin = this.setHeadSprites(underEyeSkin, true);
+        this.pooManHeadRed.add(underEyeSkin);
+
+        var moustache = this.game.add.sprite(0, 0, 'moustache');
+        moustache = this.setHeadSprites(moustache, true);
+        this.pooManHeadRed.add(moustache);
+
+        var lips = this.game.add.sprite(0, 0, 'lips');
+        lips = this.setHeadSprites(lips, true);
+        this.pooManHeadRed.add(lips);
+    }
+
+    setNormalHead() {
+        this.pooManHeadNormal = this.game.add.group();
+
+        var face = this.game.add.sprite(0, 0, 'face');
+        face = this.setHeadSprites(face, false);
+        this.pooManHeadNormal.add(face);
+
+        var hair = this.game.add.sprite(0, 0, 'hair');
+        hair = this.setHeadSprites(hair, false);
+        this.pooManHeadNormal.add(hair);
+
+        var leftEyeBrow = this.game.add.sprite(0, 0, 'leftEyeBrow');
+        leftEyeBrow = this.setHeadSprites(leftEyeBrow, false);
+        this.pooManHeadNormal.add(leftEyeBrow);
+
+        var rightEyeBrow = this.game.add.sprite(0, 0, 'rightEyeBrow');
+        rightEyeBrow = this.setHeadSprites(rightEyeBrow, false);
+        this.pooManHeadNormal.add(rightEyeBrow);
+
+        var eyelashes = this.game.add.sprite(0, 0, 'eyelashes');
+        eyelashes = this.setHeadSprites(eyelashes, false);
+        this.pooManHeadNormal.add(eyelashes);
+
+        var leftEye = this.game.add.sprite(0, 0, 'leftEye');
+        leftEye = this.setHeadSprites(leftEye, false);
+        this.pooManHeadNormal.add(leftEye);
+
+        var rightEye = this.game.add.sprite(0, 0, 'rightEye');
+        rightEye = this.setHeadSprites(rightEye, false);
+        this.pooManHeadNormal.add(rightEye);
+
+        var underEyeSkin = this.game.add.sprite(0, 0, 'underEyeSkin');
+        underEyeSkin = this.setHeadSprites(underEyeSkin, false);
+        this.pooManHeadNormal.add(underEyeSkin);
+
+        var moustache = this.game.add.sprite(0, 0, 'moustache');
+        moustache = this.setHeadSprites(moustache, false);
+        this.pooManHeadNormal.add(moustache);
+
+        var lips = this.game.add.sprite(0, 0, 'lips');
+        lips = this.setHeadSprites(lips, false);
+        this.pooManHeadNormal.add(lips);
+    }
+
+    setHeadSprites(sprite, shouldBeRed) {
+        if (shouldBeRed) {
+            sprite.tint = 0x990000;
+        }
+        sprite.anchor.x = 0.5;
+        sprite.anchor.y = 0.5;
+        return sprite;
     }
 
     setSceneParameters() {
         this.startBadProgressWidth = 150;
-        this.minMagneticPowerToCalculate = 5;
-        this.minMagneticPower = 5;
-        this.maxMagneticPower = 15;
+        this.minMagneticPowerToCalculate = 10;
+        this.minMagneticPower = 12;
+        this.maxMagneticPower = 23;
         this.maxMagneticRandomPower = this.maxMagneticPower / 2;
-        this.maxPlayerPower = 18;
+        this.maxPlayerPower = 25;
         this.whenUpdateMinPower = 120;
         this.countFromUpdateMinPower = this.whenUpdateMinPower;
         this.timeInCorrectArea = 0;
@@ -130,12 +241,11 @@ export default class PooScene extends ChaptersManager {
     }
 
     getPlayerPower(halfGameWidth) {
-        if (!this.game.input.mousePointer.isDown) {
+        if (!this.game.input.activePointer.isDown) {
             return 0;
         }
         var mouseDistanceToCenter = (halfGameWidth - this.game.input.x) * -1;
         return mouseDistanceToCenter / halfGameWidth * this.maxPlayerPower;
-
     }
 
     getRandom(min, max) {
@@ -143,6 +253,6 @@ export default class PooScene extends ChaptersManager {
     }
 
     getRandomInt(min, max) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
+        return Math.floor(Math.random() * (max - min));
     }
 }
