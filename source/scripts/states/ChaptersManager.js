@@ -29,7 +29,7 @@ export default class ChaptersManager extends Phaser.State{
 
 		if(this.game.global.currentChapterIndex + 1 < this.game.global.chaptersList.length){
 			this.game.global.currentChapterIndex++;
-			this.game.state.start(this.game.global.chaptersList[this.game.global.currentChapterIndex], true, false, this.game.global.currentChapterIndex);
+			this.game.state.start('PooScene', true, false, this.game.global.currentChapterIndex);
 		} else {
 			alert('last chapter');
 			this.gameOver();
