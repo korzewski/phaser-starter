@@ -2,39 +2,93 @@ import ChaptersManager from './chapters_manager';
 
 export default class PooScene extends ChaptersManager {
     preload() {
-        this.game.load.image('pooMan', 'assets/images/pooMan.JPG');
-        this.game.load.image('toiletBarCorrect', 'assets/images/toiletBarCorrect.png');
-        this.game.load.image('toiletBarBad', 'assets/images/toiletBarBad.png');
-        this.game.load.image('toiletMarker', 'assets/images/toiletMarker.png');
-        this.game.load.image('pooManHead', 'assets/images/pooManHead_normal.png');
-        this.game.load.image('pooManHead', 'assets/images/pooManHead_normal.png');
+        this.game.load.image('background', 'assets/images/explosion.png');
+        this.game.load.image('pooMan', 'assets/images/pooMan/01.png');
+        this.game.load.image('toiletBarCorrect', 'assets/images/pooMan/toiletBarCorrect.png');
+        this.game.load.image('toiletBarBad', 'assets/images/pooMan/toiletBarBad.png');
+        this.game.load.image('toiletMarker', 'assets/images/pooMan/toiletMarker.png');
+        this.game.load.spritesheet('head', 'assets/images/pooMan/head.png', 165, 210);
+        //this.game.load.spritesheet('explosion', 'assets/images/explosion.png', 46.25, 37.5, 62);
     }
 
     create() {
         this.setSceneParameters();
         this.setPooMan();
         this.setBar();
+        //this.explosion = this.game.add.sprite(0, 0, 'explosion');
+        //this.explosion.animations.add('explode');
+        //this.explosion.play('explode', 60, true);
     }
 
     setPooMan() {
-        this.pooMan = this.game.add.sprite(0, 0, 'pooMan');
-        this.pooManHeadNormal = this.game.add.sprite(565, 290, 'pooManHead');
-        this.pooManHeadNormal.anchor.x = 0.5;
-        this.pooManHeadNormal.anchor.y = 0.5;
-        this.pooManHeadRed = this.game.add.sprite(565, 290, 'pooManHead');
-        this.pooManHeadRed.anchor.x = 0.5;
-        this.pooManHeadRed.anchor.y = 0.5;
-        this.pooManHeadRed.alpha = 0;
-        this.pooManHeadRed.tint = 0x990000;
+        this.game.add.sprite(0, 0, 'background');
+        this.pooManGroup = this.game.add.group();
+        this.pooMan = this.game.add.sprite(0, 150, 'pooMan');
+        this.pooManGroup.add(this.pooMan);
+
+        this.setNormalHead();
+        //this.setRedHead();
+
+        this.pooManGroup.add(this.pooManHeadNormal);
+        //this.pooManGroup.add(this.pooManHeadRed);
+
+        //this.pooManHeadRed.x = 155;
+        //this.pooManHeadRed.y = 78;
+        this.pooManHeadNormal.x = 155;
+        this.pooManHeadNormal.y = 78;
+
+        var headHeightAboveBody = this.pooManHeadNormal.y - this.pooMan.y;
+        var groupHeight = headHeightAboveBody + this.pooMan.height;
+
+
+        this.pooManGroup.x = this.game.world.width / 2 - this.pooMan.width / 2;
+        this.pooManGroup.y = this.game.world.height / 2 - groupHeight / 2;
+    }
+
+    setRedHead() {
+        //this.pooManHeadRed = this.game.add.group();
+        //this.pooManHeadRed.alpha = 0;
+
+
+
+        var allHair = this.game.add.sprite(0, 0, 'head', 1);
+        allHair = this.setHeadSprites(allHair, false);
+        //this.pooManHeadRed.add(allHair);
+    }
+
+    setNormalHead() {
+        this.pooManHeadNormal = this.game.add.group();
+
+        var faceOnly = this.game.add.sprite(/*this.pooMan.width / 2*/0, 0, 'head', 0);
+        faceOnly = this.setHeadSprites(faceOnly, false);
+        this.pooManHeadNormal.add(faceOnly);
+
+        this.faceOnlyRed = this.game.add.sprite(0, 0, 'head', 0);
+        this.faceOnlyRed = this.setHeadSprites(this.faceOnlyRed, true);
+        this.faceOnlyRed.alpha = 0;
+        this.pooManHeadNormal.add(this.faceOnlyRed);
+
+        var allHair = this.game.add.sprite(/*this.pooMan.width / 2*/0, 0, 'head', 1);
+        allHair = this.setHeadSprites(allHair, false);
+        this.pooManHeadNormal.add(allHair);
+    }
+
+    setHeadSprites(sprite, shouldBeRed) {
+        if (shouldBeRed) {
+            sprite.tint = 0x990000;
+        }
+        sprite./*scale.*/anchor.x = 0.5;
+        sprite./*scale.*/anchor.y = 0.5;
+        return sprite;
     }
 
     setSceneParameters() {
         this.startBadProgressWidth = 150;
-        this.minMagneticPowerToCalculate = 5;
-        this.minMagneticPower = 5;
-        this.maxMagneticPower = 15;
+        this.minMagneticPowerToCalculate = 10;
+        this.minMagneticPower = 12;
+        this.maxMagneticPower = 23;
         this.maxMagneticRandomPower = this.maxMagneticPower / 2;
-        this.maxPlayerPower = 18;
+        this.maxPlayerPower = 25;
         this.whenUpdateMinPower = 120;
         this.countFromUpdateMinPower = this.whenUpdateMinPower;
         this.timeInCorrectArea = 0;
@@ -106,8 +160,8 @@ export default class PooScene extends ChaptersManager {
         var scaleValue = distanceToEdge / this.toiletBarBadLeft.width * (this.maxHeadScale - 1) + 1;
         this.pooManHeadNormal.scale = new Phaser.Point(scaleValue, scaleValue);
 
-        this.pooManHeadRed.scale = new Phaser.Point(scaleValue, scaleValue);
-        this.pooManHeadRed.alpha = distanceToEdge / this.toiletBarBadLeft.width * this.maxAlpha;
+        //this.pooManHeadRed.scale = new Phaser.Point(scaleValue, scaleValue);
+        this.faceOnlyRed.alpha = distanceToEdge / this.toiletBarBadLeft.width * this.maxAlpha;
     }
 
     isPlayerLoser() {
@@ -131,12 +185,11 @@ export default class PooScene extends ChaptersManager {
     }
 
     getPlayerPower(halfGameWidth) {
-        if (!this.game.input.mousePointer.isDown) {
+        if (!this.game.input.activePointer.isDown) {
             return 0;
         }
         var mouseDistanceToCenter = (halfGameWidth - this.game.input.x) * -1;
         return mouseDistanceToCenter / halfGameWidth * this.maxPlayerPower;
-
     }
 
     getRandom(min, max) {
@@ -144,6 +197,6 @@ export default class PooScene extends ChaptersManager {
     }
 
     getRandomInt(min, max) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
+        return Math.floor(Math.random() * (max - min));
     }
 }
