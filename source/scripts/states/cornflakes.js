@@ -38,6 +38,14 @@ export default class extends ChaptersManager {
 		this.load.spritesheet('cornflakesBowl', 'assets/images/cornflakes/bowl.png', _bowl.width, _bowl.height);
 	}
 
+	createBackground() {
+		const background = this.add.sprite(
+			0,
+			0,
+			'cornflakesBackground',
+		);
+	}
+
 	createOrder(order) {
 		const group = this.add.group();
 
@@ -75,14 +83,6 @@ export default class extends ChaptersManager {
 
 				group.add(cornflake);
 			}, this);
-	}
-
-	createBackground() {
-		const background = this.add.sprite(
-			0,
-			0,
-			'cornflakesBackground',
-		);
 	}
 
 	createBox(position, cornflake) {
@@ -152,6 +152,8 @@ export default class extends ChaptersManager {
 	}
 
 	addToBowl(box, position, cornflake) {
+		console.log(this.game.global);
+
 		shake(this, box, position < 1 ? 1 : -1);
 
 		this.vars.bowl.push(cornflake);

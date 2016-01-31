@@ -10,44 +10,38 @@ export default class extends Phaser.State{
 	}
 
 	initChapters(index){
-		if(!this.global) {
-			this.global = {};
+		if(!this.game.global) {
+			this.game.global = {};
 		}
 
-		this.global.level = 1;
-		this.global.chapter = index;
+		this.game.global.level = 1;
+		this.game.global.chapter = index;
 
-    if(this.global.chapter < 0) {
-			this.global.chapters = shuffle(['CoffeeMachine', 'Cornflakes', 'Toilet']);
-        console.log('chapters:', this.global.chapters);
+    if(this.game.global.chapter < 0) {
+			this.game.global.chapters = shuffle(['CoffeeMachine', 'Cornflakes', 'Toilet']);
 
-				this.nextChapter();
-      }
+			this.nextChapter();
+    }
 	}
 
 	nextChapter() {
-		alert('next chapter');
+		if(this.game.global.chapter + 1 < this.game.global.chapters.length) {
+			this.game.global.chapter++;
 
-		if(this.global.chapter + 1 < this.global.chapters.length) {
-			this.global.chapter++;
 			this.state.start(
-				this.global.chapters[this.global.chapter],
+				this.game.global.chapters[this.game.global.chapter],
 				true,
 				false,
-				this.global.chapter
+				this.game.global.chapter
 			);
 		}
 
 		else {
-			alert('last chapter');
-
 			this.lose();
 		}
 	}
 
 	lose() {
-		alert('game over');
-
 		this.initChapters(-1);
 	}
 }

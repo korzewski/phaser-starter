@@ -104,7 +104,7 @@ export default class PooScene extends ChaptersManager {
 
     setBar() {
         var barCenterY = this.game.height - 100;
-        var hardnessBarMultiplier = this.global.level * this.game.width / 20;
+        var hardnessBarMultiplier = this.game.global.level * this.game.width / 20;
         this.toiletBarMargin = 20;
         this.toiletBarBadLeft = this.game.add.sprite(0, barCenterY, 'toiletBarBad');
         this.toiletBarBadLeft.x = this.toiletBarMargin;

@@ -161,6 +161,8 @@ export default class CoffeeMachine extends ChaptersManager{
 			}
 
 			if(this.correctHits > 10){
+				console.log(this.game.global);
+
 				this.nextChapter();
 			}
 		} else {
